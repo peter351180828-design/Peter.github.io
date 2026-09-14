@@ -1,0 +1,11 @@
+V3 档案页隐藏原文件名热修复
+
+需要替换 GitHub 仓库中的两个文件：
+1. 根目录 archive.html
+2. assets/js/archive-data.js
+
+archive.html 已增加版本参数，强制浏览器重新加载最新 JS，避免旧缓存继续显示 DSC_xxxx 文件名。
+archive-data.js 的档案卡片只显示：系列名称、拍摄日期、EXIF，不显示 title / original_name / 原文件名。
+
+替换后等待 GitHub Pages 发布完成，再刷新“档案”页。
+如果浏览器仍旧显示旧页面，请按 Ctrl+F5（Windows）或 Command+Shift+R（Mac）强制刷新。
