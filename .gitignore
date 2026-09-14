@@ -1,0 +1,4 @@
+# V3 is a static GitHub Pages site.
+# Photos and EXIF data live in Supabase, so there are no local upload/data folders to ignore.
+.DS_Store
+Thumbs.db

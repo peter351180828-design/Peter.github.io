@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f1eb">
+<title>档案管理 — 你的名字</title><meta name="robots" content="noindex,nofollow"><link rel="stylesheet" href="assets/css/site.css">
+</head><body data-page="admin">
+<header class="site-header"><a class="brand" href="index.html" data-transition><span data-site-name>你的名字</span> <span data-site-subtitle>摄影档案</span></a><nav class="desktop-nav"><a href="index.html" data-transition>作品</a><a href="archive.html" data-transition>档案</a><a href="stats.html" data-transition>数据</a><a href="about.html" data-transition>关于</a></nav><div class="header-right"><span>私人后台</span><button id="logout-button" class="text-button" hidden>退出</button></div><button class="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false">菜单</button></header>
+<div id="mobile-menu" class="mobile-menu"><nav><a href="index.html" data-transition>作品</a><a href="archive.html" data-transition>档案</a><a href="stats.html" data-transition>数据</a><a href="about.html" data-transition>关于</a></nav><div class="mobile-meta"><span>私人后台</span><span>照片管理</span></div></div>
+<main class="shell admin-page">
+  <div class="page-spacer"></div>
+
+  <section id="auth-gate" class="auth-gate">
+    <div class="auth-copy"><p class="section-kicker">私人后台</p><h1>只给自己进入。</h1><p>使用你在 Supabase 中创建的唯一管理员账号登录。登录状态会保存在这台浏览器里。</p></div>
+    <form id="login-form" class="login-form">
+      <label><span>邮箱</span><input id="login-email" type="email" autocomplete="username" required placeholder="你的邮箱"></label>
+      <label><span>密码</span><input id="login-password" type="password" autocomplete="current-password" required placeholder="你的密码"></label>
+      <div class="login-actions"><button type="submit" class="primary-action">登录后台</button><span id="auth-status" aria-live="polite">等待登录</span></div>
+    </form>
+  </section>
+
+  <section id="admin-app" hidden>
+    <section class="admin-head"><div><p class="section-kicker">后台</p><h1>把照片放进记忆里。</h1></div><p>已登录：<span id="signed-in-email">—</span><br>EXIF 在浏览器本地读取；上传的是优化后的网页 JPEG，不保存 GPS。</p></section>
+
+    <section class="upload-panel">
+      <form id="upload-form">
+        <div class="upload-fields">
+          <label><span>系列名称</span><input id="upload-project" required placeholder="例如：东京散步 / 2026"></label>
+          <label class="wide"><span>这一批的备注</span><input id="upload-note" placeholder="可选，例如：第一次扫街 / 阴天"></label>
+        </div>
+        <label class="drop-zone" id="drop-zone"><input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp" multiple hidden><span class="drop-title">选择或拖入照片</span><span class="drop-note">JPEG / PNG / WebP · 浏览器会自动生成适合网页的 JPEG</span></label>
+        <div id="selected-files" class="selected-files">尚未选择照片</div>
+        <div class="upload-actions"><button type="submit" class="primary-action">上传并读取 EXIF</button><span id="upload-status" aria-live="polite">等待上传</span></div>
+      </form>
+    </section>
+
+    <section class="admin-library"><header><span>已入库照片</span><span id="admin-photo-count">—</span></header><div id="admin-photo-list" class="admin-photo-list"></div></section>
+  </section>
+
+  <footer class="site-footer"><div>网页：GitHub Pages</div><div class="center">照片与数据：Supabase</div><div class="right"><a href="部署说明.html">部署说明</a> · <a href="stats.html" data-transition>查看统计 →</a></div></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/exifr/dist/lite.umd.js"></script>
+<script src="assets/js/config.js"></script><script src="assets/js/supabase-client.js"></script><script src="assets/js/site.js"></script><script src="assets/js/admin.js"></script>
+</body></html>

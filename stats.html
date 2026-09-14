@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f1eb">
+<title>拍摄数据 — 你的名字</title><meta name="description" content="从个人摄影档案的 EXIF 中回看器材与拍摄参数习惯。"><link rel="stylesheet" href="assets/css/site.css">
+</head><body data-page="stats">
+<header class="site-header"><a class="brand" href="index.html" data-transition>你的名字 <span>摄影档案</span></a><nav class="desktop-nav"><a href="index.html" data-transition>作品</a><a href="archive.html" data-transition>档案</a><a href="stats.html" aria-current="page">数据</a><a href="about.html" data-transition>关于</a></nav><div class="header-right"><span data-photo-count>档案 —</span><a href="admin.html" data-transition>管理</a></div><button class="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false">菜单</button></header>
+<div id="mobile-menu" class="mobile-menu"><nav><a href="index.html" data-transition>作品</a><a href="archive.html" data-transition>档案</a><a href="stats.html">数据</a><a href="about.html" data-transition>关于</a><a href="admin.html" data-transition>管理</a></nav><div class="mobile-meta"><span data-photo-count>档案 —</span><span>拍摄习惯</span></div></div>
+<main class="shell stats-page">
+  <div class="page-spacer"></div>
+  <section class="stats-head"><div><p class="section-kicker">参数回看</p><h1>数据不是评价，<br>只是另一种记忆。</h1></div><p>统计只读取已上传照片中的 EXIF。它帮我看见自己反复选择的机身、镜头、焦段和曝光习惯，而不是判断照片好坏。</p></section>
+
+  <section class="metric-strip" id="metric-strip">
+    <article><span>作品总数</span><strong data-metric="total">—</strong></article>
+    <article><span>EXIF 覆盖率</span><strong data-metric="coverage">—</strong></article>
+    <article><span>主要机身</span><strong class="metric-text" data-metric="camera">—</strong></article>
+    <article><span>中位焦段</span><strong data-metric="focal">—</strong></article>
+  </section>
+
+  <section class="stats-grid">
+    <article class="stat-panel stat-panel-camera"><header><span>机身分布</span><span data-panel-total="cameras">—</span></header><div class="donut-wrap"><div id="camera-donut" class="flat-donut" aria-label="机身分布环形图"></div><div id="camera-legend" class="chart-legend"></div></div></article>
+    <article class="stat-panel"><header><span>常用焦段</span><span>按区间</span></header><div id="focal-bars" class="flat-bars"></div></article>
+    <article class="stat-panel"><header><span>镜头</span><span>前 10</span></header><div id="lens-bars" class="flat-bars"></div></article>
+    <article class="stat-panel"><header><span>光圈</span><span>前 10</span></header><div id="aperture-bars" class="flat-bars"></div></article>
+    <article class="stat-panel"><header><span>ISO</span><span>按区间</span></header><div id="iso-bars" class="flat-bars"></div></article>
+    <article class="stat-panel"><header><span>拍摄年份</span><span>时间分布</span></header><div id="year-bars" class="flat-bars"></div></article>
+  </section>
+  <div id="stats-empty" class="empty-state" hidden><p>上传带 EXIF 的照片后，这里会自动生成你的参数统计。</p><a href="admin.html" data-transition>去上传照片 →</a></div>
+  <footer class="site-footer"><div>统计来自已上传作品</div><div class="center">不保存 GPS 位置</div><div class="right"><a href="archive.html" data-transition>回到照片档案 →</a></div></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/supabase-client.js"></script><script src="assets/js/site.js"></script><script src="assets/js/archive-data.js"></script></body></html>

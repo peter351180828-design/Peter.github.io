@@ -1,0 +1,15 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f1eb">
+<title>照片档案 — 你的名字</title><meta name="description" content="按时间回看我的摄影作品与 EXIF 参数。"><link rel="stylesheet" href="assets/css/site.css">
+</head><body data-page="archive">
+<header class="site-header"><a class="brand" href="index.html" data-transition>你的名字 <span>摄影档案</span></a><nav class="desktop-nav"><a href="index.html" data-transition>作品</a><a href="archive.html" aria-current="page">档案</a><a href="stats.html" data-transition>数据</a><a href="about.html" data-transition>关于</a></nav><div class="header-right"><span data-photo-count>档案 —</span><a href="admin.html" data-transition>管理</a></div><button class="mobile-menu-button" aria-controls="mobile-menu" aria-expanded="false">菜单</button></header>
+<div id="mobile-menu" class="mobile-menu"><nav><a href="index.html" data-transition>作品</a><a href="archive.html">档案</a><a href="stats.html" data-transition>数据</a><a href="about.html" data-transition>关于</a><a href="admin.html" data-transition>管理</a></nav><div class="mobile-meta"><span data-photo-count>档案 —</span><span>按拍摄时间排列</span></div></div>
+<main class="shell archive-page">
+  <div class="page-spacer"></div>
+  <section class="archive-head"><div><p class="section-kicker">全部照片</p><h1>摄影档案</h1></div><p>把每张照片当作一次拍摄记录。图像之外，机身、镜头、焦段、光圈、快门、ISO 与曝光补偿都会保留下来。</p></section>
+  <div class="archive-toolbar"><span id="archive-count">正在读取…</span><label>系列 <select id="archive-project-filter"><option value="">全部</option></select></label></div>
+  <section id="archive-grid" class="archive-grid" aria-live="polite"></section>
+  <div id="archive-empty" class="empty-state" hidden><p>档案里还没有照片。</p><a href="admin.html" data-transition>上传第一批作品 →</a></div>
+  <footer class="site-footer"><div>按拍摄日期倒序</div><div class="center">EXIF 自动读取</div><div class="right"><a href="stats.html" data-transition>查看参数统计 →</a></div></footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/config.js"></script><script src="assets/js/supabase-client.js"></script><script src="assets/js/site.js"></script><script src="assets/js/archive-data.js"></script></body></html>
