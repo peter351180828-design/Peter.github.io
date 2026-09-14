@@ -36,7 +36,7 @@
   }
 
   function activateReveals(root = document) {
-    const els = $$('.reveal:not(.is-visible)', root);
+    const els = $$('.reveal:not(.is-visible), .project-row:not(.is-visible)', root);
     if (!('IntersectionObserver' in window)) return els.forEach(el => el.classList.add('is-visible'));
     const io = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
