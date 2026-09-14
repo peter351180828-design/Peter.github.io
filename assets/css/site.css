@@ -262,3 +262,140 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;bac
 .setup-notice{border-top:1px solid var(--line);padding:12px 0 70px;display:flex;flex-direction:column;gap:7px;max-width:720px}.setup-notice strong{font-weight:400;font-size:var(--text-md)}.setup-notice span{color:var(--muted);line-height:1.65}
 .auth-gate{display:grid;grid-template-columns:1.15fr .85fr;gap:8vw;align-items:end;padding:clamp(120px,17vw,250px) 0 clamp(100px,13vw,190px)}.auth-copy h1,.setup-block h1{font-size:clamp(44px,7vw,108px);font-weight:400;letter-spacing:-.035em;line-height:1.02;margin:0 0 30px}.auth-copy>p:last-child,.setup-block>p{max-width:560px;color:var(--muted);line-height:1.65}.login-form{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:22px}.login-form label{display:flex;flex-direction:column;gap:7px}.login-form label span{color:var(--muted)}.login-form input{border:0;border-bottom:1px solid var(--line);background:transparent;padding:9px 0;font-size:var(--text-md);outline:none;border-radius:0}.login-form input:focus{border-color:var(--ink)}.login-actions{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-top:12px}.login-actions span{color:var(--muted)}.login-actions span.error{color:#7b2f2f}.text-button{background:transparent;padding:0;color:var(--ink);cursor:pointer;border-bottom:1px solid var(--line)}.inline-action{display:inline-block;margin-top:15px;text-decoration:none}.setup-block{max-width:830px}.setup-block code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:rgba(23,23,21,.05);padding:2px 4px}
 @media(max-width:760px){.auth-gate{grid-template-columns:1fr;gap:60px;padding-top:120px}.login-actions{align-items:flex-start;flex-direction:column}}
+
+/* =========================================================
+   V3 Readability Pass — 个人档案长期阅读优化
+   保留原有极简层级，但提高浅灰辅助信息的字号与对比度。
+   ========================================================= */
+:root{
+  --muted:#65635e;
+  --text-xs:11px;
+  --text-sm:13px;
+}
+
+/* 全局辅助信息：稍大、稍深，但仍低于正文层级 */
+.section-kicker,
+.home-intro p,
+.header-right,
+.site-footer,
+.project-topline,
+.project-heading .project-summary,
+.story-caption,
+.about-lead .lede,
+.archive-head>p,
+.stats-head>p,
+.admin-head>p,
+.archive-toolbar,
+.preview-notice,
+.setup-notice span,
+.auth-copy>p:last-child,
+.setup-block>p,
+.upload-fields label>span,
+.drop-note,
+.selected-files,
+#upload-status,
+.admin-library>header,
+.login-form label span,
+.login-actions span{
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* 档案页：照片下方信息是回忆时最常看的部分 */
+.archive-card-meta{
+  font-size:14px;
+  line-height:1.45;
+  padding-top:9px;
+}
+.archive-card-exif{
+  font-size:12px;
+  line-height:1.55;
+  gap:5px 14px;
+  padding-top:6px;
+}
+
+/* 详情页 EXIF 轨道 */
+.exif-rail{
+  font-size:12px;
+  line-height:1.45;
+  gap:12px;
+}
+.exif-pair small{
+  font-size:11px;
+  line-height:1.35;
+}
+.exif-pair b{
+  font-size:12px;
+  line-height:1.4;
+}
+.archive-photo-note{
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* 数据页：标签更适合快速浏览 */
+.metric-strip span,
+.stat-panel header,
+.chart-legend b,
+.bar-label,
+.chart-empty{
+  font-size:13px;
+  line-height:1.55;
+}
+.flat-donut small{
+  font-size:11px;
+}
+
+/* 后台管理列表 */
+.admin-photo-row span,
+.admin-photo-row small,
+.admin-row-actions button{
+  font-size:12px;
+  line-height:1.5;
+}
+
+@media(max-width:820px){
+  :root{--text-sm:14px;}
+  .section-kicker,
+  .archive-head>p,
+  .stats-head>p,
+  .admin-head>p,
+  .archive-toolbar,
+  .setup-notice span,
+  .archive-card-meta,
+  .archive-photo-note{
+    font-size:14px;
+  }
+  .archive-card-exif,
+  .exif-rail,
+  .exif-pair b{
+    font-size:12.5px;
+  }
+}
+
+/* =========================================================
+   V3 Archive No-Crop Pass — 档案页保留原始画幅
+   不再用固定比例 + cover 裁切照片；版式错落只由卡片宽度控制。
+   ========================================================= */
+.archive-card-media,
+.archive-card:nth-child(3n+2) .archive-card-media,
+.archive-card:nth-child(5n+3) .archive-card-media{
+  aspect-ratio:auto !important;
+  overflow:visible;
+  background:transparent;
+}
+
+.archive-card-media img{
+  display:block;
+  width:100%;
+  height:auto !important;
+  max-width:100%;
+  object-fit:contain !important;
+  object-position:center center;
+  background:transparent;
+  transform:none !important;
+}
+
+.archive-card:hover .archive-card-media img{
+  transform:none !important;
+}

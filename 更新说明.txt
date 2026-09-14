@@ -1,11 +1,12 @@
-V3 档案页隐藏原文件名热修复
+V3 档案页“不裁切照片”补丁
 
-需要替换 GitHub 仓库中的两个文件：
-1. 根目录 archive.html
-2. assets/js/archive-data.js
+只需要替换 GitHub 中的：
+assets/css/site.css
 
-archive.html 已增加版本参数，强制浏览器重新加载最新 JS，避免旧缓存继续显示 DSC_xxxx 文件名。
-archive-data.js 的档案卡片只显示：系列名称、拍摄日期、EXIF，不显示 title / original_name / 原文件名。
+改动：
+1. 档案页不再强制 4:3 / 4:5 / 16:10 比例。
+2. 所有照片按原始长宽比完整显示。
+3. 去掉档案卡片图片的 hover 放大，避免边缘在交互时被吃掉。
+4. 保留原本的双栏、错落宽度、留白和可读性优化。
 
-替换后等待 GitHub Pages 发布完成，再刷新“档案”页。
-如果浏览器仍旧显示旧页面，请按 Ctrl+F5（Windows）或 Command+Shift+R（Mac）强制刷新。
+替换后等待 GitHub Pages 更新，再 Ctrl+F5 / Command+Shift+R 强制刷新。
