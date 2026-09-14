@@ -6,7 +6,7 @@
 window.PHOTO_ARCHIVE_CONFIG = {
   supabaseUrl: 'https://kspatelbqtoyotxtadqn.supabase.co',
   supabaseKey: 'sb_publishable_yrHi4_DDO10AE-sfp2Sd5Q_7voGT7Pa',
-  siteName: '你的名字',
+  siteName: '咸鱼桑',
   siteSubtitle: '摄影档案',
   storageBucket: 'photos',
   maxUploadEdge: 2560,
