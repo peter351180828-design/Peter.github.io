@@ -120,7 +120,8 @@
   function archiveCard(photo) {
     const exif = [photo.exif?.camera, photo.formatted?.focalLength, photo.formatted?.aperture, photo.formatted?.shutter].filter(Boolean);
     const d = photo.exif?.dateTaken || photo.uploadedAt;
-    return `<article class="archive-card reveal" data-project="${escapeHtml(photo.project)}"><a href="project.html?collection=${encodeURIComponent(photo.project)}" data-transition><div class="archive-card-media"><img loading="lazy" src="${escapeHtml(photo.url)}" alt="${escapeHtml(photo.title || photo.project)}"></div><div class="archive-card-meta"><span>${escapeHtml(photo.title || photo.project)}</span><span>${escapeHtml(dateLabel(d))}</span></div><div class="archive-card-exif">${exif.map(v => `<span>${escapeHtml(v)}</span>`).join('')}</div></a></article>`;
+    const project = photo.project || '未分类';
+    return `<article class="archive-card reveal" data-project="${escapeHtml(project)}"><a href="project.html?collection=${encodeURIComponent(project)}" data-transition><div class="archive-card-media"><img loading="lazy" src="${escapeHtml(photo.url)}" alt="${escapeHtml(project)}"></div><div class="archive-card-meta"><span>${escapeHtml(project)}</span><span>${escapeHtml(dateLabel(d))}</span></div><div class="archive-card-exif">${exif.map(v => `<span>${escapeHtml(v)}</span>`).join('')}</div></a></article>`;
   }
 
   async function initArchive() {

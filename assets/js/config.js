@@ -4,9 +4,9 @@
  * Publishable key 本来就是给浏览器公开使用的；不要把 Secret key 填在这里。
  */
 window.PHOTO_ARCHIVE_CONFIG = {
-  supabaseUrl: 'https://kspatelbqtoyotxtadqn.supabase.co',
-  supabaseKey: 'sb_publishable_yrHi4_DDO10AE-sfp2Sd5Q_7voGT7Pa',
-  siteName: '咸鱼桑',
+  supabaseUrl: 'PASTE_SUPABASE_PROJECT_URL_HERE',
+  supabaseKey: 'PASTE_SUPABASE_PUBLISHABLE_KEY_HERE',
+  siteName: '你的名字',
   siteSubtitle: '摄影档案',
   storageBucket: 'photos',
   maxUploadEdge: 2560,
