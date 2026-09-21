@@ -384,6 +384,73 @@ button {
   font-weight: 600;
 }
 
+.editor-template-switcher {
+  justify-self: center;
+  display: grid;
+  grid-template-columns: 32px minmax(110px, auto) 32px;
+  align-items: center;
+  gap: 8px;
+}
+
+.editor-template-switch {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  padding: 0 0 2px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.34);
+  color: #24231f;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 350;
+  line-height: 1;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease,
+    opacity 160ms ease;
+}
+
+.editor-template-switch:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(0, 0, 0, 0.26);
+  transform: translateY(-1px);
+}
+
+.editor-template-switch:active:not(:disabled) {
+  transform: translateY(0) scale(0.96);
+}
+
+.editor-template-switch:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.editor-template-current {
+  min-width: 110px;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+}
+
+.editor-template-count {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #8f8c84;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.editor-template-count span {
+  opacity: 0.48;
+}
+
 .editor-workspace {
   flex: 1;
   min-height: 0;
@@ -6384,4 +6451,586 @@ small {
 .manga-frame-reset-button:hover {
   border-color: rgba(28, 27, 24, 0.3);
   color: #24231f;
+}
+
+/* Template Settings Memory V1 */
+.template-memory-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.template-memory-status {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #85837c;
+  font-size: 9px;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.template-memory-dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.template-memory-reset {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.4);
+  color: #5f5d57;
+  font: inherit;
+  font-size: 9px;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+.template-memory-reset:hover {
+  border-color: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.78);
+  color: #22211f;
+}
+
+@media (max-width: 1180px) {
+  .template-memory-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .template-memory-status {
+    white-space: normal;
+  }
+}
+
+
+/* Workflow V2.1 — in-editor adjacent template navigation */
+@media (max-width: 720px) {
+  .editor-template-switcher {
+    grid-template-columns: 28px minmax(86px, auto) 28px;
+    gap: 5px;
+  }
+
+  .editor-template-switch {
+    width: 28px;
+    height: 28px;
+    font-size: 19px;
+  }
+
+  .editor-template-current {
+    min-width: 86px;
+  }
+
+  .editor-template-current .editor-title {
+    max-width: 112px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* =========================================================
+   Workflow V2.2 — Mobile Studio
+   Keep preview and controls visible together on phones.
+   Desktop layout is intentionally unchanged.
+   ========================================================= */
+@media (max-width: 900px) {
+  .editor-overlay {
+    padding:
+      max(8px, env(safe-area-inset-top))
+      max(10px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom))
+      max(10px, env(safe-area-inset-left));
+    overflow: hidden;
+  }
+
+  .editor-header {
+    flex: 0 0 48px;
+    height: 48px;
+    min-height: 48px;
+    grid-template-columns: minmax(54px, 1fr) auto minmax(54px, 1fr);
+    column-gap: 6px;
+  }
+
+  .editor-back,
+  .editor-export {
+    min-height: 36px;
+    font-size: 11px;
+  }
+
+  .editor-back {
+    padding: 0 6px 0 0;
+  }
+
+  .editor-export {
+    min-width: 56px;
+    padding: 7px 12px;
+  }
+
+  .editor-template-switcher {
+    grid-template-columns: 34px minmax(82px, auto) 34px;
+    gap: 4px;
+  }
+
+  .editor-template-switch {
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+  }
+
+  .editor-template-current {
+    min-width: 82px;
+    gap: 2px;
+  }
+
+  .editor-template-current .editor-title {
+    max-width: 112px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+
+  .editor-workspace {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(190px, 46%) minmax(0, 1fr);
+    gap: 8px;
+    padding-top: 8px;
+    overflow: hidden;
+  }
+
+  .editor-canvas {
+    grid-column: 1;
+    grid-row: 1;
+    order: unset;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    padding: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.22);
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  .editor-panel--right {
+    grid-column: 1;
+    grid-row: 2;
+    order: unset;
+    min-height: 0;
+    height: 100%;
+    max-height: none;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  .inspector-header {
+    padding: 8px 8px 7px;
+    background: rgba(240, 239, 233, 0.97);
+    backdrop-filter: blur(14px);
+  }
+
+  .inspector-header .panel-label {
+    display: none;
+  }
+
+  .inspector-tabs {
+    gap: 5px;
+  }
+
+  .inspector-tabs button {
+    min-height: 38px;
+    padding: 8px 4px;
+    border-radius: 7px;
+    font-size: 10px;
+  }
+
+  .template-memory-toolbar {
+    min-height: 30px;
+    margin-top: 7px;
+    padding-top: 7px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .template-memory-status {
+    font-size: 8px;
+    white-space: nowrap;
+  }
+
+  .template-memory-reset {
+    min-height: 28px;
+    padding: 5px 8px;
+  }
+
+  .inspector-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0 10px calc(24px + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  /* On phones the image chooser becomes a small floating action
+     over the preview instead of occupying an entire vertical block. */
+  .editor-panel--left {
+    position: absolute;
+    z-index: 35;
+    top: 16px;
+    left: 8px;
+    order: unset;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    pointer-events: none;
+  }
+
+  .editor-panel--left .panel-label,
+  .editor-panel--left .panel-note {
+    display: none;
+  }
+
+  .editor-panel--left .upload-placeholder {
+    width: auto;
+    min-width: 0;
+    min-height: 36px;
+    height: 36px;
+    padding: 0 11px;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.16);
+    border-radius: 999px;
+    background: rgba(247, 246, 241, 0.9);
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    pointer-events: auto;
+  }
+
+  .editor-panel--left .upload-placeholder:hover,
+  .editor-panel--left.photo-drop-active .upload-placeholder {
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  .editor-panel--left .upload-placeholder-icon {
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .editor-panel--left .upload-placeholder-title {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .editor-panel--left .upload-placeholder-hint {
+    display: none;
+  }
+
+  /* Slider/toggle targets need enough finger room without changing
+     their visual density too much. */
+  .inspector-panel .control-heading {
+    min-height: 24px;
+  }
+
+  .inspector-panel .toggle-row {
+    min-height: 38px;
+  }
+
+  .inspector-panel .studio-range {
+    min-height: 30px;
+  }
+
+  .manga-panel-menu > summary {
+    min-height: 48px;
+  }
+}
+
+/* Phone landscape: preview and controls become side-by-side so the
+   canvas remains visible while the inspector scrolls independently. */
+@media (max-width: 900px) and (orientation: landscape) {
+  .editor-overlay {
+    padding:
+      max(5px, env(safe-area-inset-top))
+      max(8px, env(safe-area-inset-right))
+      max(6px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
+  }
+
+  .editor-header {
+    flex-basis: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .editor-workspace {
+    grid-template-columns: minmax(0, 56%) minmax(250px, 44%);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 8px;
+    padding-top: 6px;
+  }
+
+  .editor-canvas {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 6px;
+  }
+
+  .editor-panel--right {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .editor-panel--left {
+    top: 14px;
+    left: 8px;
+  }
+
+  .inspector-header {
+    padding: 6px 7px;
+  }
+
+  .inspector-tabs button {
+    min-height: 34px;
+    padding: 6px 3px;
+  }
+
+  .template-memory-toolbar {
+    margin-top: 5px;
+    padding-top: 5px;
+  }
+
+  .template-memory-status {
+    display: none;
+  }
+
+  .inspector-content {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+}
+
+/* Touch devices: keep I03 panel-resize handles easy to grab. */
+@media (pointer: coarse) {
+  .manga-resize-handle--vertical {
+    width: 30px;
+  }
+
+  .manga-resize-handle--horizontal {
+    height: 30px;
+  }
+
+  .manga-resize-handle--vertical > span {
+    width: 7px;
+    height: 40px;
+  }
+
+  .manga-resize-handle--horizontal > span {
+    width: 40px;
+    height: 7px;
+  }
+}
+
+@media (max-width: 420px) and (orientation: portrait) {
+  .editor-header {
+    grid-template-columns: minmax(46px, 1fr) auto minmax(46px, 1fr);
+  }
+
+  .editor-back {
+    max-width: 58px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .editor-export {
+    min-width: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .editor-template-switcher {
+    grid-template-columns: 32px minmax(72px, auto) 32px;
+  }
+
+  .editor-template-switch {
+    width: 32px;
+    height: 32px;
+  }
+
+  .editor-template-current {
+    min-width: 72px;
+  }
+
+  .editor-template-current .editor-title {
+    max-width: 86px;
+  }
+
+  .editor-workspace {
+    grid-template-rows: minmax(180px, 44%) minmax(0, 1fr);
+  }
+
+  .template-memory-status {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* =========================================================
+   Workflow V2.2.1 — Mobile preview dock fix
+   The earlier narrow-screen rules could still leave the preview
+   row clipped by legacy mobile overflow rules. This final override
+   gives portrait mobile a definite preview dock and a single
+   independently scrolling inspector below it.
+   ========================================================= */
+@media (max-width: 900px) and (orientation: portrait) {
+  .studio--editing {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden !important;
+  }
+
+  .editor-overlay {
+    width: 100%;
+    height: 100dvh;
+    max-height: 100dvh;
+    min-height: 0;
+    overflow: hidden !important;
+  }
+
+  .editor-workspace {
+    position: relative;
+    flex: 1 1 0;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    display: block;
+    padding-top: 8px;
+    overflow: hidden !important;
+  }
+
+  .editor-canvas {
+    position: absolute;
+    z-index: 10;
+    top: 8px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: clamp(220px, 38dvh, 350px);
+    min-height: 220px;
+    max-height: 350px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    overflow: hidden !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .preview-scale-shell,
+  .preview-scale-layer,
+  .editor-canvas .editor-preview {
+    visibility: visible !important;
+  }
+
+  .preview-scale-shell {
+    flex: 0 0 auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .editor-panel--right {
+    position: absolute;
+    z-index: 20;
+    top: calc(clamp(220px, 38dvh, 350px) + 16px);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important;
+  }
+
+  .inspector-header {
+    flex: 0 0 auto;
+  }
+
+  .inspector-content {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .editor-panel--left {
+    position: absolute !important;
+    z-index: 60;
+    top: 18px !important;
+    left: 12px !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .editor-panel--left .panel-label,
+  .editor-panel--left .panel-note {
+    display: none !important;
+  }
+
+  .editor-panel--left .upload-placeholder {
+    display: inline-flex !important;
+    min-height: 36px !important;
+    height: 36px !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 430px) and (orientation: portrait) {
+  .editor-canvas {
+    height: clamp(205px, 35dvh, 300px);
+    min-height: 205px;
+  }
+
+  .editor-panel--right {
+    top: calc(clamp(205px, 35dvh, 300px) + 16px);
+  }
 }

@@ -317,6 +317,252 @@ const FILM_MATTE_TEXT_THEMES: Record<
   },
 }
 
+type MangaLayout =
+  | 'layout-1'
+  | 'layout-2'
+  | 'layout-3'
+
+type TemplateMemorySettings = {
+  frameSize: number
+  shadowRibbonOpacity: number
+  shadowRibbonBlur: number
+  shadowRibbonPositionY: number
+  shadowRibbonWidthMode: 'inset' | 'full'
+  mangaLinkedCrop: boolean
+  mangaLayout: MangaLayout
+  mangaPrimarySplit: number
+  mangaSecondarySplit: number
+  mangaMainImageX: number
+  mangaMainImageY: number
+  mangaMainImageScale: number
+  mangaTopImageX: number
+  mangaTopImageY: number
+  mangaTopImageScale: number
+  mangaBottomImageX: number
+  mangaBottomImageY: number
+  mangaBottomImageScale: number
+  mangaPanelGap: number
+  mangaBorderWidth: number
+  mangaSceneLabel: string
+  mangaSideCaption: string
+  mangaShowSceneLabel: boolean
+  mangaShowSideCaption: boolean
+  cameraSize: number
+  metadataSize: number
+  logoSize: number
+  fontWeight: FontWeightMode
+  fontPreset: FontPreset
+  metadataMode: MetadataMode
+  metadataSourceMode: MetadataSourceMode
+  customMetadata: CustomMetadataFields
+  customMetadataDirty: CustomMetadataDirty
+  customMetadataKeepLine: CustomMetadataKeepLine
+  showDate: boolean
+  metadataPrimaryColorOverride: string | null
+  metadataSecondaryColorOverride: string | null
+  metadataPosition: MetadataPosition
+  metadataOffsetX: number
+  metadataOffsetY: number
+  backgroundMode: BackgroundMode
+  filmMatteColorPreset: FilmMatteColorPreset
+  filmMatteTextPreset: FilmMatteTextPreset
+  customFrameColor: string
+  logoMode: LogoMode
+  brandSelection: BrandSelection
+  logoVariant: string
+  logoPosition: LogoPosition
+  logoOffsetX: number
+  logoOffsetY: number
+  customLogoText: string
+  customLogoBaseWidth: number
+  customLogoInvertOnDark: boolean
+  customLogoRemoveWhite: boolean
+  customLogoWhiteStrength: number
+}
+
+const TEMPLATE_MEMORY_VERSION = 1
+const TEMPLATE_MEMORY_PREFIX =
+  'photo-frame-studio:template-memory:v1:'
+
+const getTemplateMemoryKey = (
+  templateId: string,
+) => `${TEMPLATE_MEMORY_PREFIX}${templateId}`
+
+const getTemplateMemoryDefaults = (
+  selectedTemplate: (typeof templates)[number],
+): TemplateMemorySettings => ({
+  frameSize: selectedTemplate.frameDefault,
+  shadowRibbonOpacity: 50,
+  shadowRibbonBlur: 1,
+  shadowRibbonPositionY: 97,
+  shadowRibbonWidthMode: 'inset',
+  mangaLinkedCrop: false,
+  mangaLayout: 'layout-1',
+  mangaPrimarySplit: 72,
+  mangaSecondarySplit: 50,
+  mangaMainImageX: 0,
+  mangaMainImageY: 0,
+  mangaMainImageScale: 100,
+  mangaTopImageX: 0,
+  mangaTopImageY: 0,
+  mangaTopImageScale: 100,
+  mangaBottomImageX: 0,
+  mangaBottomImageY: 0,
+  mangaBottomImageScale: 100,
+  mangaPanelGap: 8,
+  mangaBorderWidth: 1,
+  mangaSceneLabel: 'SCENE 03',
+  mangaSideCaption:
+    'FRAME STUDY · ORIGINAL WORK',
+  mangaShowSceneLabel: true,
+  mangaShowSideCaption: true,
+  cameraSize:
+    selectedTemplate.id === 'I02'
+      ? 118
+      : selectedTemplate.id === 'I03'
+        ? 108
+        : 100,
+  metadataSize:
+    selectedTemplate.id === 'I02'
+      ? 92
+      : selectedTemplate.id === 'I03'
+        ? 94
+        : 100,
+  logoSize: 100,
+  fontWeight:
+    selectedTemplate.id === 'I02'
+      ? 'bold'
+      : 'medium',
+  fontPreset: 'template',
+  metadataMode:
+    selectedTemplate.id === '02' ||
+    selectedTemplate.id === '03'
+      ? 'minimal'
+      : 'full',
+  metadataSourceMode:
+    selectedTemplate.id.startsWith('I')
+      ? 'custom'
+      : 'auto',
+  customMetadata: getEmptyCustomMetadata(),
+  customMetadataDirty:
+    getCleanCustomMetadataDirty(),
+  customMetadataKeepLine:
+    getCleanCustomMetadataKeepLine(),
+  showDate: true,
+  metadataPrimaryColorOverride: null,
+  metadataSecondaryColorOverride: null,
+  metadataPosition:
+    selectedTemplate.id === '02' ||
+    selectedTemplate.id === '03' ||
+    selectedTemplate.id === '04'
+      ? 'right'
+      : 'left',
+  metadataOffsetX: 0,
+  metadataOffsetY: 0,
+  backgroundMode:
+    selectedTemplate.backgroundDefault,
+  filmMatteColorPreset: 'black',
+  filmMatteTextPreset: 'white',
+  customFrameColor: '#d8d2c4',
+  logoMode:
+    selectedTemplate.id === '02' ||
+    selectedTemplate.id.startsWith('I')
+      ? 'hidden'
+      : 'brand',
+  brandSelection: 'auto',
+  logoVariant: '',
+  logoPosition:
+    selectedTemplate.id === '02' ||
+    selectedTemplate.id === '03' ||
+    selectedTemplate.id === '04'
+      ? 'left'
+      : 'right',
+  logoOffsetX: 0,
+  logoOffsetY: 0,
+  customLogoText: 'FRAME',
+  customLogoBaseWidth: 100,
+  customLogoInvertOnDark: false,
+  customLogoRemoveWhite: false,
+  customLogoWhiteStrength: 32,
+})
+
+const readTemplateMemory = (
+  selectedTemplate: (typeof templates)[number],
+): TemplateMemorySettings => {
+  const defaults =
+    getTemplateMemoryDefaults(selectedTemplate)
+
+  try {
+    const raw = window.localStorage.getItem(
+      getTemplateMemoryKey(selectedTemplate.id),
+    )
+
+    if (!raw) {
+      return defaults
+    }
+
+    const parsed = JSON.parse(raw) as {
+      version?: number
+      settings?: Partial<TemplateMemorySettings>
+    }
+
+    if (
+      parsed.version !== TEMPLATE_MEMORY_VERSION ||
+      !parsed.settings
+    ) {
+      return defaults
+    }
+
+    return {
+      ...defaults,
+      ...parsed.settings,
+      customMetadata: {
+        ...defaults.customMetadata,
+        ...parsed.settings.customMetadata,
+      },
+      customMetadataDirty: {
+        ...defaults.customMetadataDirty,
+        ...parsed.settings.customMetadataDirty,
+      },
+      customMetadataKeepLine: {
+        ...defaults.customMetadataKeepLine,
+        ...parsed.settings.customMetadataKeepLine,
+      },
+    }
+  } catch {
+    return defaults
+  }
+}
+
+const writeTemplateMemory = (
+  templateId: string,
+  settings: TemplateMemorySettings,
+) => {
+  try {
+    window.localStorage.setItem(
+      getTemplateMemoryKey(templateId),
+      JSON.stringify({
+        version: TEMPLATE_MEMORY_VERSION,
+        settings,
+      }),
+    )
+  } catch {
+    // Local storage may be unavailable in private/restricted contexts.
+  }
+}
+
+const clearTemplateMemory = (
+  templateId: string,
+) => {
+  try {
+    window.localStorage.removeItem(
+      getTemplateMemoryKey(templateId),
+    )
+  } catch {
+    // Ignore storage failures; defaults can still be applied in-memory.
+  }
+}
+
 type GalleryView = 'categories' | 'templates'
 
 type TemplateCategory =
@@ -327,6 +573,122 @@ const getTemplateCategory = (id: string): TemplateCategory =>
   id.startsWith('I')
     ? 'illustration'
     : 'photography'
+
+type NavigationMemorySettings = {
+  galleryView: GalleryView
+  activeCategory: TemplateCategory
+  templateId: string
+  editorOpen: boolean
+  controlSection: ControlSection
+  metadataAdvancedOpen: boolean
+  logoAdvancedOpen: boolean
+}
+
+const NAVIGATION_MEMORY_VERSION = 1
+const NAVIGATION_MEMORY_KEY =
+  'photo-frame-studio:navigation-memory:v1'
+
+const getNavigationMemoryDefaults =
+  (): NavigationMemorySettings => ({
+    galleryView: 'categories',
+    activeCategory: 'photography',
+    templateId: templates[0]?.id ?? '01',
+    editorOpen: false,
+    controlSection: 'frame',
+    metadataAdvancedOpen: false,
+    logoAdvancedOpen: false,
+  })
+
+const readNavigationMemory =
+  (): NavigationMemorySettings => {
+    const defaults = getNavigationMemoryDefaults()
+
+    if (typeof window === 'undefined') {
+      return defaults
+    }
+
+    try {
+      const raw = window.localStorage.getItem(
+        NAVIGATION_MEMORY_KEY,
+      )
+
+      if (!raw) {
+        return defaults
+      }
+
+      const parsed = JSON.parse(raw) as {
+        version?: number
+        settings?: Partial<NavigationMemorySettings>
+      }
+
+      if (
+        parsed.version !== NAVIGATION_MEMORY_VERSION ||
+        !parsed.settings
+      ) {
+        return defaults
+      }
+
+      const storedTemplateId =
+        typeof parsed.settings.templateId === 'string' &&
+        templates.some(
+          (item) => item.id === parsed.settings?.templateId,
+        )
+          ? parsed.settings.templateId
+          : defaults.templateId
+
+      const storedCategory =
+        parsed.settings.activeCategory === 'photography' ||
+        parsed.settings.activeCategory === 'illustration'
+          ? parsed.settings.activeCategory
+          : getTemplateCategory(storedTemplateId)
+
+      const galleryView: GalleryView =
+        parsed.settings.galleryView === 'templates'
+          ? 'templates'
+          : 'categories'
+
+      const controlSection: ControlSection =
+        parsed.settings.controlSection === 'type' ||
+        parsed.settings.controlSection === 'metadata' ||
+        parsed.settings.controlSection === 'logo'
+          ? parsed.settings.controlSection
+          : 'frame'
+
+      return {
+        galleryView,
+        activeCategory:
+          galleryView === 'templates'
+            ? getTemplateCategory(storedTemplateId)
+            : storedCategory,
+        templateId: storedTemplateId,
+        editorOpen:
+          parsed.settings.editorOpen === true,
+        controlSection,
+        metadataAdvancedOpen:
+          parsed.settings.metadataAdvancedOpen === true,
+        logoAdvancedOpen:
+          parsed.settings.logoAdvancedOpen === true,
+      }
+    } catch {
+      return defaults
+    }
+  }
+
+const writeNavigationMemory = (
+  settings: NavigationMemorySettings,
+) => {
+  try {
+    window.localStorage.setItem(
+      NAVIGATION_MEMORY_KEY,
+      JSON.stringify({
+        version: NAVIGATION_MEMORY_VERSION,
+        settings,
+      }),
+    )
+  } catch {
+    // Navigation memory is optional; the app can still work without it.
+  }
+}
 
 const CATEGORY_COPY: Record<
   TemplateCategory,
@@ -403,18 +765,36 @@ const HOME_TEMPLATE_COPY: Record<
 }
 
 function App() {
-  const [activeTemplate, setActiveTemplate] = useState(0)
+  const initialNavigationRef =
+    useRef<NavigationMemorySettings | null>(null)
+
+  if (initialNavigationRef.current === null) {
+    initialNavigationRef.current =
+      readNavigationMemory()
+  }
+
+  const initialNavigation =
+    initialNavigationRef.current
+
+  const [activeTemplate, setActiveTemplate] = useState(() => {
+    const storedIndex = templates.findIndex(
+      (item) => item.id === initialNavigation.templateId,
+    )
+
+    return storedIndex >= 0 ? storedIndex : 0
+  })
   const [galleryView, setGalleryView] =
-    useState<GalleryView>('categories')
+    useState<GalleryView>(initialNavigation.galleryView)
   const [activeCategory, setActiveCategory] =
-    useState<TemplateCategory>('photography')
-  const [editorOpen, setEditorOpen] = useState(false)
+    useState<TemplateCategory>(initialNavigation.activeCategory)
+  const [editorOpen, setEditorOpen] =
+    useState(initialNavigation.editorOpen)
   const [controlSection, setControlSection] =
-    useState<ControlSection>('frame')
+    useState<ControlSection>(initialNavigation.controlSection)
   const [metadataAdvancedOpen, setMetadataAdvancedOpen] =
-    useState(false)
+    useState(initialNavigation.metadataAdvancedOpen)
   const [logoAdvancedOpen, setLogoAdvancedOpen] =
-    useState(false)
+    useState(initialNavigation.logoAdvancedOpen)
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [photoFileName, setPhotoFileName] = useState('photo')
   const [photoNaturalSize, setPhotoNaturalSize] = useState({
@@ -435,7 +815,7 @@ function App() {
   const [shadowRibbonWidthMode, setShadowRibbonWidthMode] =
     useState<'inset' | 'full'>('inset')
   const [mangaLinkedCrop, setMangaLinkedCrop] = useState(false)
-  const [mangaLayout, setMangaLayout] = useState<'layout-1' | 'layout-2' | 'layout-3'>('layout-1')
+  const [mangaLayout, setMangaLayout] = useState<MangaLayout>('layout-1')
   const [mangaPrimarySplit, setMangaPrimarySplit] = useState(72)
   const [mangaSecondarySplit, setMangaSecondarySplit] = useState(50)
   const [mangaMainImageX, setMangaMainImageX] = useState(0)
@@ -551,6 +931,8 @@ function App() {
   const metadataCopyRef = useRef<HTMLDivElement | null>(null)
   const logoSlotRef = useRef<HTMLDivElement | null>(null)
   const transitionLocked = useRef(false)
+  const templateMemoryReadyRef = useRef(false)
+  const templateMemoryHydrationTimerRef = useRef<number | null>(null)
 
   const [previewScale, setPreviewScale] = useState(1)
   const [previewShellSize, setPreviewShellSize] = useState({
@@ -563,6 +945,26 @@ function App() {
     useState<CSSProperties>({})
 
   const template = templates[activeTemplate]
+
+  useEffect(() => {
+    writeNavigationMemory({
+      galleryView,
+      activeCategory,
+      templateId: template.id,
+      editorOpen,
+      controlSection,
+      metadataAdvancedOpen,
+      logoAdvancedOpen,
+    })
+  }, [
+    galleryView,
+    activeCategory,
+    template.id,
+    editorOpen,
+    controlSection,
+    metadataAdvancedOpen,
+    logoAdvancedOpen,
+  ])
 
   const categoryTemplateEntries =
     templates
@@ -583,6 +985,26 @@ function App() {
         index === activeTemplate,
     ),
   )
+
+  const categoryTemplateCount =
+    categoryTemplateEntries.length
+
+  const previousTemplateEntry =
+    categoryTemplateCount > 1
+      ? categoryTemplateEntries[
+          (activeCategoryPosition - 1 +
+            categoryTemplateCount) %
+            categoryTemplateCount
+        ]
+      : null
+
+  const nextTemplateEntry =
+    categoryTemplateCount > 1
+      ? categoryTemplateEntries[
+          (activeCategoryPosition + 1) %
+            categoryTemplateCount
+        ]
+      : null
 
   const isFilmMatteTemplate =
     template.id === '02'
@@ -905,97 +1327,254 @@ function App() {
     '--film-caption-size': `${Math.max(5.5, 5 + frameSize * 0.03)}px`,
   } as CSSProperties
 
-  useEffect(() => {
+  const applyTemplateMemorySettings = (
+    settings: TemplateMemorySettings,
+  ) => {
+    setFrameSize(settings.frameSize)
+    setShadowRibbonOpacity(settings.shadowRibbonOpacity)
+    setShadowRibbonBlur(settings.shadowRibbonBlur)
+    setShadowRibbonPositionY(settings.shadowRibbonPositionY)
+    setShadowRibbonWidthMode(settings.shadowRibbonWidthMode)
+    setMangaLinkedCrop(settings.mangaLinkedCrop)
+    setMangaLayout(settings.mangaLayout)
+    setMangaPrimarySplit(settings.mangaPrimarySplit)
+    setMangaSecondarySplit(settings.mangaSecondarySplit)
+    setMangaMainImageX(settings.mangaMainImageX)
+    setMangaMainImageY(settings.mangaMainImageY)
+    setMangaMainImageScale(settings.mangaMainImageScale)
+    setMangaTopImageX(settings.mangaTopImageX)
+    setMangaTopImageY(settings.mangaTopImageY)
+    setMangaTopImageScale(settings.mangaTopImageScale)
+    setMangaBottomImageX(settings.mangaBottomImageX)
+    setMangaBottomImageY(settings.mangaBottomImageY)
+    setMangaBottomImageScale(settings.mangaBottomImageScale)
+    setMangaPanelGap(settings.mangaPanelGap)
+    setMangaBorderWidth(settings.mangaBorderWidth)
+    setMangaSceneLabel(settings.mangaSceneLabel)
+    setMangaSideCaption(settings.mangaSideCaption)
+    setMangaShowSceneLabel(settings.mangaShowSceneLabel)
+    setMangaShowSideCaption(settings.mangaShowSideCaption)
+    setCameraSize(settings.cameraSize)
+    setMetadataSize(settings.metadataSize)
+    setLogoSize(settings.logoSize)
+    setFontWeight(settings.fontWeight)
+    setFontPreset(settings.fontPreset)
+    setMetadataMode(settings.metadataMode)
+    setMetadataSourceMode(settings.metadataSourceMode)
+    setCustomMetadata(settings.customMetadata)
+    setCustomMetadataDirty(settings.customMetadataDirty)
+    setCustomMetadataKeepLine(settings.customMetadataKeepLine)
+    setShowDate(settings.showDate)
+    setMetadataPrimaryColorOverride(
+      settings.metadataPrimaryColorOverride,
+    )
+    setMetadataSecondaryColorOverride(
+      settings.metadataSecondaryColorOverride,
+    )
+    setMetadataPosition(settings.metadataPosition)
+    setMetadataOffsetX(settings.metadataOffsetX)
+    setMetadataOffsetY(settings.metadataOffsetY)
+    setBackgroundMode(settings.backgroundMode)
+    setFilmMatteColorPreset(settings.filmMatteColorPreset)
+    setFilmMatteTextPreset(settings.filmMatteTextPreset)
+    setCustomFrameColor(settings.customFrameColor)
+    setLogoMode(settings.logoMode)
+    setBrandSelection(settings.brandSelection)
+    setLogoVariant(settings.logoVariant)
+    setLogoPosition(settings.logoPosition)
+    setLogoOffsetX(settings.logoOffsetX)
+    setLogoOffsetY(settings.logoOffsetY)
+    setCustomLogoText(settings.customLogoText)
+    setCustomLogoBaseWidth(settings.customLogoBaseWidth)
+    setCustomLogoInvertOnDark(settings.customLogoInvertOnDark)
+    setCustomLogoRemoveWhite(settings.customLogoRemoveWhite)
+    setCustomLogoWhiteStrength(settings.customLogoWhiteStrength)
+    setCustomLogoWhiteStrengthDirty(false)
+  }
+
+  const getCurrentTemplateMemorySettings =
+    (): TemplateMemorySettings => ({
+      frameSize,
+      shadowRibbonOpacity,
+      shadowRibbonBlur,
+      shadowRibbonPositionY,
+      shadowRibbonWidthMode,
+      mangaLinkedCrop,
+      mangaLayout,
+      mangaPrimarySplit,
+      mangaSecondarySplit,
+      mangaMainImageX,
+      mangaMainImageY,
+      mangaMainImageScale,
+      mangaTopImageX,
+      mangaTopImageY,
+      mangaTopImageScale,
+      mangaBottomImageX,
+      mangaBottomImageY,
+      mangaBottomImageScale,
+      mangaPanelGap,
+      mangaBorderWidth,
+      mangaSceneLabel,
+      mangaSideCaption,
+      mangaShowSceneLabel,
+      mangaShowSideCaption,
+      cameraSize,
+      metadataSize,
+      logoSize,
+      fontWeight,
+      fontPreset,
+      metadataMode,
+      metadataSourceMode,
+      customMetadata,
+      customMetadataDirty,
+      customMetadataKeepLine,
+      showDate,
+      metadataPrimaryColorOverride,
+      metadataSecondaryColorOverride,
+      metadataPosition,
+      metadataOffsetX,
+      metadataOffsetY,
+      backgroundMode,
+      filmMatteColorPreset,
+      filmMatteTextPreset,
+      customFrameColor,
+      logoMode,
+      brandSelection,
+      logoVariant,
+      logoPosition,
+      logoOffsetX,
+      logoOffsetY,
+      customLogoText,
+      customLogoBaseWidth,
+      customLogoInvertOnDark,
+      customLogoRemoveWhite,
+      customLogoWhiteStrength,
+    })
+
+  const markTemplateMemoryReady = () => {
+    if (templateMemoryHydrationTimerRef.current !== null) {
+      window.clearTimeout(
+        templateMemoryHydrationTimerRef.current,
+      )
+    }
+
+    templateMemoryHydrationTimerRef.current =
+      window.setTimeout(() => {
+        templateMemoryReadyRef.current = true
+        templateMemoryHydrationTimerRef.current = null
+      }, 0)
+  }
+
+  const resetCurrentTemplateSettings = () => {
     const selectedTemplate = templates[activeTemplate]
-    setFrameSize(selectedTemplate.frameDefault)
-    setShadowRibbonOpacity(50)
-    setShadowRibbonBlur(1)
-    setShadowRibbonPositionY(97)
-    setShadowRibbonWidthMode('inset')
-    setMangaLinkedCrop(false)
-    setMangaLayout('layout-1')
-    setMangaPrimarySplit(72)
-    setMangaSecondarySplit(50)
-    setMangaMainImageX(0)
-    setMangaMainImageY(0)
-    setMangaMainImageScale(100)
-    setMangaTopImageX(0)
-    setMangaTopImageY(0)
-    setMangaTopImageScale(100)
-    setMangaBottomImageX(0)
-    setMangaBottomImageY(0)
-    setMangaBottomImageScale(100)
-    setMangaPanelGap(8)
-    setMangaBorderWidth(1)
-    setMangaSceneLabel('SCENE 03')
-    setMangaSideCaption('FRAME STUDY · ORIGINAL WORK')
-    setMangaShowSceneLabel(true)
-    setMangaShowSideCaption(true)
-    setCameraSize(
-      selectedTemplate.id === 'I02'
-        ? 118
-        : selectedTemplate.id === 'I03'
-          ? 108
-          : 100,
-    )
-    setMetadataSize(
-      selectedTemplate.id === 'I02'
-        ? 92
-        : selectedTemplate.id === 'I03'
-          ? 94
-          : 100,
-    )
-    setLogoSize(100)
-    setFontWeight(
-      selectedTemplate.id === 'I02'
-        ? 'bold'
-        : 'medium',
-    )
-    setFontPreset('template')
-    setMetadataMode(
-      selectedTemplate.id === '02' ||
-      selectedTemplate.id === '03'
-        ? 'minimal'
-        : 'full',
-    )
-    setMetadataSourceMode(
-      selectedTemplate.id.startsWith('I')
-        ? 'custom'
-        : 'auto',
-    )
-    setShowDate(true)
-    setMetadataPosition(
-      selectedTemplate.id === '02' ||
-      selectedTemplate.id === '03' ||
-      selectedTemplate.id === '04'
-        ? 'right'
-        : 'left',
-    )
-    setMetadataOffsetX(0)
-    setMetadataOffsetY(0)
+    const defaults =
+      getTemplateMemoryDefaults(selectedTemplate)
+
+    templateMemoryReadyRef.current = false
+    clearTemplateMemory(selectedTemplate.id)
+    applyTemplateMemorySettings(defaults)
     setMetadataAdvancedOpen(false)
     setLogoAdvancedOpen(false)
-    setBackgroundMode(selectedTemplate.backgroundDefault)
-    setFilmMatteColorPreset('black')
-    setFilmMatteTextPreset('white')
-    setLogoMode(
-      selectedTemplate.id === '02' ||
-      selectedTemplate.id.startsWith('I')
-        ? 'hidden'
-        : 'brand',
+    markTemplateMemoryReady()
+  }
+
+  useEffect(() => {
+    const selectedTemplate = templates[activeTemplate]
+
+    templateMemoryReadyRef.current = false
+    applyTemplateMemorySettings(
+      readTemplateMemory(selectedTemplate),
     )
-    setBrandSelection('auto')
-    setLogoPosition(
-      selectedTemplate.id === '02' ||
-      selectedTemplate.id === '03' ||
-      selectedTemplate.id === '04'
-        ? 'left'
-        : 'right',
-    )
-    setLogoOffsetX(0)
-    setLogoOffsetY(0)
-    setCustomLogoText('FRAME')
+    setMetadataAdvancedOpen(false)
+    setLogoAdvancedOpen(false)
+    markTemplateMemoryReady()
+
+    return () => {
+      if (
+        templateMemoryHydrationTimerRef.current !== null
+      ) {
+        window.clearTimeout(
+          templateMemoryHydrationTimerRef.current,
+        )
+        templateMemoryHydrationTimerRef.current = null
+      }
+    }
   }, [activeTemplate])
+
+  useEffect(() => {
+    if (!templateMemoryReadyRef.current) {
+      return
+    }
+
+    const selectedTemplate = templates[activeTemplate]
+    const saveTimer = window.setTimeout(() => {
+      writeTemplateMemory(
+        selectedTemplate.id,
+        getCurrentTemplateMemorySettings(),
+      )
+    }, 120)
+
+    return () => {
+      window.clearTimeout(saveTimer)
+    }
+  }, [
+    activeTemplate,
+    frameSize,
+    shadowRibbonOpacity,
+    shadowRibbonBlur,
+    shadowRibbonPositionY,
+    shadowRibbonWidthMode,
+    mangaLinkedCrop,
+    mangaLayout,
+    mangaPrimarySplit,
+    mangaSecondarySplit,
+    mangaMainImageX,
+    mangaMainImageY,
+    mangaMainImageScale,
+    mangaTopImageX,
+    mangaTopImageY,
+    mangaTopImageScale,
+    mangaBottomImageX,
+    mangaBottomImageY,
+    mangaBottomImageScale,
+    mangaPanelGap,
+    mangaBorderWidth,
+    mangaSceneLabel,
+    mangaSideCaption,
+    mangaShowSceneLabel,
+    mangaShowSideCaption,
+    cameraSize,
+    metadataSize,
+    logoSize,
+    fontWeight,
+    fontPreset,
+    metadataMode,
+    metadataSourceMode,
+    customMetadata,
+    customMetadataDirty,
+    customMetadataKeepLine,
+    showDate,
+    metadataPrimaryColorOverride,
+    metadataSecondaryColorOverride,
+    metadataPosition,
+    metadataOffsetX,
+    metadataOffsetY,
+    backgroundMode,
+    filmMatteColorPreset,
+    filmMatteTextPreset,
+    customFrameColor,
+    logoMode,
+    brandSelection,
+    logoVariant,
+    logoPosition,
+    logoOffsetX,
+    logoOffsetY,
+    customLogoText,
+    customLogoBaseWidth,
+    customLogoInvertOnDark,
+    customLogoRemoveWhite,
+    customLogoWhiteStrength,
+  ])
 
   useEffect(() => {
     if (!effectiveBrand) {
@@ -1927,6 +2506,32 @@ function App() {
       total
 
     selectTemplate(
+      categoryTemplateEntries[
+        nextPosition
+      ].index,
+    )
+  }
+
+  const stepEditorTemplate = (offset: number) => {
+    const total =
+      categoryTemplateEntries.length
+
+    if (total <= 1) return
+
+    // Persist the current template immediately before switching so
+    // even a quick arrow click cannot outrun the normal debounced save.
+    writeTemplateMemory(
+      template.id,
+      getCurrentTemplateMemorySettings(),
+    )
+
+    const nextPosition =
+      (activeCategoryPosition +
+        offset +
+        total) %
+      total
+
+    setActiveTemplate(
       categoryTemplateEntries[
         nextPosition
       ].index,
@@ -3658,7 +4263,54 @@ function App() {
             <button className="editor-back" onClick={closeEditor}>
               ← 模板
             </button>
-            <div className="editor-title">{template.name}</div>
+            <div className="editor-template-switcher" aria-label="模板切换">
+              <button
+                type="button"
+                className="editor-template-switch editor-template-switch--previous"
+                onClick={() => stepEditorTemplate(-1)}
+                disabled={!previousTemplateEntry}
+                title={
+                  previousTemplateEntry
+                    ? `上一个模板：${previousTemplateEntry.item.name}`
+                    : '没有上一个模板'
+                }
+                aria-label={
+                  previousTemplateEntry
+                    ? `切换到上一个模板 ${previousTemplateEntry.item.name}`
+                    : '没有上一个模板'
+                }
+              >
+                ‹
+              </button>
+
+              <div className="editor-template-current">
+                <div className="editor-title">{template.name}</div>
+                <div className="editor-template-count">
+                  {String(activeCategoryPosition + 1).padStart(2, '0')}
+                  <span>/</span>
+                  {String(categoryTemplateCount).padStart(2, '0')}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="editor-template-switch editor-template-switch--next"
+                onClick={() => stepEditorTemplate(1)}
+                disabled={!nextTemplateEntry}
+                title={
+                  nextTemplateEntry
+                    ? `下一个模板：${nextTemplateEntry.item.name}`
+                    : '没有下一个模板'
+                }
+                aria-label={
+                  nextTemplateEntry
+                    ? `切换到下一个模板 ${nextTemplateEntry.item.name}`
+                    : '没有下一个模板'
+                }
+              >
+                ›
+              </button>
+            </div>
             <button
               className={`editor-export ${
                 isExporting
@@ -3849,6 +4501,21 @@ function App() {
                     aria-selected={controlSection === 'logo'}
                   >
                     标识
+                  </button>
+                </div>
+
+                <div className="template-memory-toolbar">
+                  <span className="template-memory-status">
+                    <span className="template-memory-dot" aria-hidden="true" />
+                    本机自动记忆 · 不保存图片
+                  </span>
+                  <button
+                    type="button"
+                    className="template-memory-reset"
+                    onClick={resetCurrentTemplateSettings}
+                    title="清除当前模板的本机记忆并恢复默认设置"
+                  >
+                    恢复模板默认
                   </button>
                 </div>
               </div>
